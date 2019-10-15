@@ -11,20 +11,45 @@ var query='';
 
 switch (process.argv[2]){
     case 'spotify-this-song':
-        
+            if(query==''){
+                query="The Sign"
+            }
+            else{
+                query=query.substring(0,query.length-1)
+            }
             spotify.search({ type: 'track', query: query }, function(err, data) {
                 if (err) {
                   return console.log('Error occurred: ' + err);
                 }
                
-              console.log(data.tracks.items[0].name); 
-              console.log(data.tracks.items[0].artists[0].name); 
-              console.log(data.tracks.items[0].album.name); 
-              console.log(data.tracks.items[0].external_urls.spotify); 
+              for(i in data.tracks.items){
+                  if((query.toLowerCase())==data.tracks.items[i].name.toLowerCase()){
+                  console.log(data.tracks.items[i].name)
+                  console.log(data.tracks.items[i].artists[0].name); 
+                  console.log(data.tracks.items[i].album.name); 
+                  console.log(data.tracks.items[i].external_urls.spotify); 
+                    break;
+                  }
+                  
+                //   console.log(data.tracks.items[i].name) 
+              }
+              
+              
               });
+              console.log("No song found");
               break;
     case 'concert-this':
-
+            var queryURL = "https://rest.bandsintown.com/artists/" + query + "/events?app_id=codingbootcamp";
+            thing.get(queryUrl).then(function(response){
+                console.log("Title: "+response.data.Title);
+                console.log("Year: "+response.data.Year);
+                console.log("IMDB Rating: " +response.data.Ratings[0].Value);
+                console.log("Rotten Tomatoes Rating: " +response.data.Ratings[1].Value);
+                console.log("Country of Origin: " +response.data.Country)
+                console.log("Language: " +response.data.Language)
+                console.log("Plot: " +response.data.Plot)
+                console.log("Actors: " +response.data.Actors)
+            })
     case 'movie-this':
             var queryUrl = "http://www.omdbapi.com/?t=" + query + "&y=&plot=short&apikey=trilogy";
             thing.get(queryUrl).then(function(response){
