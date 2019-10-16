@@ -13,4 +13,5 @@ This shows the function of the spotify-this-song arguement, which when prompted 
 
 
 And here is a gif showing all of them working
+
 ![Gif of all](https://github.com/GageDorl/LIRI/blob/master/assets/gif-of-all.gif?raw=true)
