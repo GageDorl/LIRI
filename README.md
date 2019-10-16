@@ -10,3 +10,7 @@ This shows the function of the movie-this arguement, which when prompted with a 
 ![Picture showing spotify-this-song](https://github.com/GageDorl/LIRI/blob/master/assets/spotify-this-song.PNG?raw=true)
 
 This shows the function of the spotify-this-song arguement, which when prompted with a song title, returns the title, the artist, the album name and a link to listen to it
+
+
+And here is a gif showing all of them working
+![Gif of all](https://github.com/GageDorl/LIRI/blob/master/assets/gif-of-all.gif?raw=true)
