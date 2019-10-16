@@ -4,6 +4,7 @@ var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotify);
 var thing = require('axios');
 var moment = require('moment');
+var fs = require('fs');
 
 
 var query='';
@@ -13,8 +14,24 @@ var query='';
                 query+=' ';
             }
         }
-
+if(process.argv[2]=='do-what-it-says'){
+    fs.readFile('random.txt','utf8', function(error,data){
+        if(error){
+            return console.log(error)
+        }
+        dataArr=data.split(',');
+        process.argv[2]=dataArr[0];
+        query=dataArr[1].substring(1,dataArr[1].length-1)
+        Switch();
+    });
+    
+}
+else{
+    Switch();
+}
+function Switch(){
 switch (process.argv[2]){
+    
     case 'spotify-this-song':
         var found=false;
         var finished = false;
@@ -62,6 +79,9 @@ switch (process.argv[2]){
             })
             break;
     case 'movie-this':
+            if(query==''){
+                query='Mr. Nobody'
+            }
             var queryUrl = "http://www.omdbapi.com/?t=" + query + "&y=&plot=short&apikey=trilogy";
             thing.get(queryUrl).then(function(response){
                 console.log("Title: "+response.data.Title);
@@ -73,6 +93,8 @@ switch (process.argv[2]){
                 console.log("Plot: " +response.data.Plot)
                 console.log("Actors: " +response.data.Actors)
             })
-    case 'do-what-it-says':
-
+            break;
+        case 'do-what-it-says':
+           
+}
 }
