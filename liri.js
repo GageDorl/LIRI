@@ -21,7 +21,13 @@ if(process.argv[2]=='do-what-it-says'){
         }
         dataArr=data.split(',');
         process.argv[2]=dataArr[0];
-        query=dataArr[1].substring(1,dataArr[1].length-1)
+        if(dataArr[1].substring(0,1)=='"'&&dataArr[1].substring(dataArr[1].length-1,dataArr[1].length)=='"'){
+            query=dataArr[1].substring(1,dataArr[1].length-1)
+        }
+        else{
+            query=dataArr[1];
+        }
+        
         Switch();
     });
     
@@ -46,10 +52,13 @@ switch (process.argv[2]){
                
               for(i in data.tracks.items){
                   if((query.toLowerCase())==data.tracks.items[i].name.toLowerCase()){
-                  console.log(data.tracks.items[i].name)
-                  console.log(data.tracks.items[i].artists[0].name); 
-                  console.log(data.tracks.items[i].album.name); 
-                  console.log(data.tracks.items[i].external_urls.spotify); 
+                  var thisThing=data.tracks.items[i].name+'\n'+data.tracks.items[i].artists[0].name+'\n'+data.tracks.items[i].album.name+'\n'+data.tracks.items[i].external_urls.spotify;
+                  console.log(thisThing)
+                  fs.appendFile('log.txt','spotify-this-song '+query+'\n\n'+thisThing+'\n\n', function(err){
+                    if(err){
+    
+                    }
+                }) 
                     break;
                     found=true;
                   }
@@ -68,31 +77,40 @@ switch (process.argv[2]){
     case 'concert-this':
             var queryUrl = "https://rest.bandsintown.com/artists/" + query + "/events?app_id=codingbootcamp";
             thing.get(queryUrl).then(function(response){
+                fs.appendFile('log.txt','concert-this '+query, function(err){
+                    if(err){
+    
+                    }
+                })
                 for(i in response.data){
-                console.log();
-                console.log('Venue Name: '+ response.data[i].venue.name)
-                console.log('Location: '+response.data[i].venue.city+', '+response.data[i].venue.region+' '+response.data[i].venue.country)
-                console.log('Date: '+moment(response.data[i].datetime).format('ddd MMM D, YYYY'))
-                console.log()
+                var thisThing = ('\n\nVenue Name: '+ response.data[i].venue.name+'\nLocation: '+response.data[i].venue.city+', '+response.data[i].venue.region+' '+response.data[i].venue.country+'\nDate: '+moment(response.data[i].datetime).format('ddd MMM D, YYYY'))
+                console.log(thisThing);
+                fs.appendFile('log.txt',thisThing, function(err){
+                    if(err){
+    
+                    }
+                })
                 }
                 
             })
             break;
     case 'movie-this':
+            var thisThing='';
             if(query==''){
                 query='Mr. Nobody'
             }
             var queryUrl = "http://www.omdbapi.com/?t=" + query + "&y=&plot=short&apikey=trilogy";
             thing.get(queryUrl).then(function(response){
-                console.log("Title: "+response.data.Title);
-                console.log("Year: "+response.data.Year);
-                console.log("IMDB Rating: " +response.data.Ratings[0].Value);
-                console.log("Rotten Tomatoes Rating: " +response.data.Ratings[1].Value);
-                console.log("Country of Origin: " +response.data.Country)
-                console.log("Language: " +response.data.Language)
-                console.log("Plot: " +response.data.Plot)
-                console.log("Actors: " +response.data.Actors)
+            thisThing=("\nTitle: "+response.data.Title+"\nYear: "+response.data.Year+"\nIMDB Rating: " +response.data.imdbRating+'/10'+"\nRotten Tomatoes Rating: " +response.data.Ratings[1].Value+("\nCountry of Origin: " +response.data.Country+"\nLanguage: " +response.data.Language+"\nPlot: " +response.data.Plot+"\nActors: " +response.data.Actors))
+                // console.log(response.data)
+                console.log(thisThing)
+                fs.appendFile('log.txt','movie-this '+query+'\n'+thisThing+'\n\n', function(err){
+                    if(err){
+    
+                    }
+                })
             })
+            
             break;
         case 'do-what-it-says':
            
